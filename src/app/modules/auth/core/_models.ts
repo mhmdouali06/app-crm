@@ -1,6 +1,6 @@
 export interface AuthModel {
-  api_token?: string
-  access_token?: any
+  // api_token?: string
+  api_token?: any
   refreshToken?: string
 }
 
@@ -46,6 +46,7 @@ export interface UserSocialNetworksModel {
 
 export interface UserModel {
   id: number
+  user?: any
   image_url?: string
   username: string
   password: string | undefined

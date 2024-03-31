@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
@@ -7,6 +7,7 @@ import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
+import {AppContext} from '../../../../AppContext'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -34,6 +35,7 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+  const {setPermission} = useContext(AppContext)
 
   const formik = useFormik({
     initialValues,
@@ -44,10 +46,11 @@ export function Login() {
       try {
         const {data: auth} = await login(values.email, values.password)
         saveAuth(auth)
-        
-        const {data: user} = await getUserByToken(auth.access_token)
-        
-        await  setCurrentUser(user)
+
+        const {data: user} = await getUserByToken(auth.api_token)
+
+        await setCurrentUser(user)
+        await setPermission(user.roles)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -68,7 +71,6 @@ export function Login() {
       {/* begin::Heading */}
       <div className='text-center mb-10'>
         <h1 className='text-dark mb-3'>Se connecter </h1>
-     
       </div>
       {/* begin::Heading */}
 
@@ -166,7 +168,6 @@ export function Login() {
             </span>
           )}
         </button>
-
       </div>
       {/* end::Action */}
     </form>

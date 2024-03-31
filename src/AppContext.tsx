@@ -1,8 +1,7 @@
-import { title } from 'process'
+import {title} from 'process'
 import React, {createContext, useContext, ReactNode, useState} from 'react'
 import {toast} from 'react-toastify'
 import Swal from 'sweetalert2'
-
 
 // Define the type for your context value
 interface AppContextValue {
@@ -19,8 +18,7 @@ interface AppProviderProps {
 
 // Create a context provider component
 export const AppProvider: React.FC<AppProviderProps> = ({children}) => {
-
-
+  const [permission, setPermission] = useState<any>([])
   const errorToast = (message: string) => {
     toast.error(message, {
       position: 'top-right',
@@ -48,34 +46,44 @@ export const AppProvider: React.FC<AppProviderProps> = ({children}) => {
   const CustomAlert = async () => {
     try {
       const result = await Swal.fire({
-        title: "Vous êtes sur de vouloir supprimer cet élément?",
-        text: "Vous ne pourrez pas revenir en arrière!",
-        icon: 'warning', 
+        title: 'Vous êtes sur de vouloir supprimer cet élément?',
+        text: 'Vous ne pourrez pas revenir en arrière!',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Oui, supprimer!',
         cancelButtonText: 'Annuler',
-      });
+      })
 
       if (result.isConfirmed) {
         return true
-
       } else {
         return false
       }
     } catch (error) {
-      console.error('Error showing SweetAlert:', error);
+      console.error('Error showing SweetAlert:', error)
     }
-  };
+  }
 
+  const hasPermission = (key: string) => {
+    for (const role of permission) {
+      for (const per of role.permissions) {
+        if (per.name === key) {
+          return true
+        }
+      }
+    }
+    return false
+  }
 
   const value: any = {
-   
-    
     errorToast,
     successToast,
     CustomAlert,
+    setPermission,
+    permission,
+    hasPermission,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

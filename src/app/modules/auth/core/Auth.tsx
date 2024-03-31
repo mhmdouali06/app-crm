@@ -70,10 +70,8 @@ const AuthInit: FC<WithChildren> = ({children}) => {
       try {
         if (!didRequest.current) {
           const {data} = await getUserByToken(apiToken)
-          console.log(getUserByToken(apiToken));
-          
+
           if (data) {
-            
             setCurrentUser(data)
           }
         }
@@ -89,8 +87,8 @@ const AuthInit: FC<WithChildren> = ({children}) => {
       return () => (didRequest.current = true)
     }
 
-    if (auth && auth.access_token) {
-      requestUser(auth.access_token)
+    if (auth && auth.api_token) {
+      requestUser(auth.api_token)
     } else {
       logout()
       setShowSplashScreen(false)

@@ -10,10 +10,12 @@ import {BsCalendar2Event} from 'react-icons/bs'
 import {FaBoxesPacking} from 'react-icons/fa6'
 
 import {IoColorPalette} from 'react-icons/io5'
+import {useContext} from 'react'
+import {AppContext} from '../../../../AppContext'
 
 export function AsideMenuMain() {
   const intl = useIntl()
-
+  const {hasPermission} = useContext(AppContext)
   return (
     <>
       <AsideMenuItem
@@ -28,8 +30,15 @@ export function AsideMenuMain() {
       /> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>catégorie</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Utilisateur</span>
         </div>
+        {hasPermission('view_user') && (
+          <AsideMenuItem
+            to='/users/liste/all'
+            title='liste des utilisateur'
+            reactIcon={<TbCategory2 />}
+          />
+        )}
       </div>
       {/* <AsideMenuItemWithSub to='/category' title='Nos parfums' reactIcon={<TbCategory2 />} >
               <AsideMenuItem to='/category/liste/all' title='liste' hasBullet={true} />
@@ -38,13 +47,6 @@ export function AsideMenuMain() {
               <AsideMenuItem to='/category/liste/small' title='Petite' hasBullet={true} />
              
       </AsideMenuItemWithSub> */}
-      <AsideMenuItem to='/category/liste/all' title='Nos parfums' reactIcon={<TbCategory2 />} />
-      <AsideMenuItem to='/color/' title='Couleurs' reactIcon={<IoColorPalette />} />
-      <AsideMenuItem to='/product' title='Bougies' reactIcon={<GiCandleHolder />} />
-      <AsideMenuItem to='/events' title='Evènements' reactIcon={<BsCalendar2Event />} />
-      <AsideMenuItem to='/packs' title='Packs' reactIcon={<FaBoxesPacking />} />
-      <AsideMenuItem to='/code-promo' title='Codes Promo' reactIcon={<TbPercentage />} />
-      <AsideMenuItem to='/orders' title='Commandes' reactIcon={<CiShoppingBasket />} />
 
       {/* <AsideMenuItemWithSub
         to='/crafted/pages'

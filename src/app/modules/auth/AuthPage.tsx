@@ -23,11 +23,7 @@ const AuthLayout = () => {
       <div className='d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20 '>
         {/* begin::Logo */}
         <a href='#' className='mb-12'>
-          <img
-            alt='Logo'
-            src={toAbsoluteUrl('/media/logos/default_logo_dark.png')}
-            className='theme-dark-show h-150px'
-          />
+          <img alt='Logo' src={toAbsoluteUrl('icon.png')} className='theme-dark-show h-150px' />
           <img
             alt='Logo'
             src={toAbsoluteUrl('/media/logos/default_logo_dark.png')}
@@ -42,8 +38,6 @@ const AuthLayout = () => {
         {/* end::Wrapper */}
       </div>
       {/* end::Content */}
-     
-  
     </div>
   )
 }

@@ -7,7 +7,6 @@ const getAuth = (): AuthModel | undefined => {
   }
 
   const lsValue: string | null = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY)
-  
   if (!lsValue) {
     return
   }
@@ -49,20 +48,14 @@ const removeAuth = () => {
 }
 
 export function setupAxios(axios: any) {
-  // axios.defaults.headers.Accept = 'application/json'
-  // axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-  // axios.defaults.headers['widhContent-Type'] = 'application/json'
-  // axios.defaults.headers['Access-Control-Allow-Origin'] = true
-  // axios.defaults.headers['Access-Control-Allow-Credentials'] = '*'
-  // axios.defaults.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-  axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-  
+  axios.defaults.headers.Accept = 'application/json'
   axios.interceptors.request.use(
     (config: {headers: {Authorization: string}}) => {
       const auth = getAuth()
       if (auth && auth.api_token) {
         config.headers.Authorization = `Bearer ${auth.api_token}`
       }
+
       return config
     },
     (err: any) => Promise.reject(err)

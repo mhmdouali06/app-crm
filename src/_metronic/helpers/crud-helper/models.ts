@@ -4,9 +4,11 @@ export type ID = undefined | null | number
 
 export type PaginationState = {
   page: number
-  current_page?: any
+  total?: number
   per_page?: number
-  items_per_page?:any
+  current_page?: any
+
+  items_per_page?: any
   links?: Array<{label: string; active: boolean; url: string | null; page: number | null}>
 }
 
@@ -25,7 +27,7 @@ export type SearchState = {
 
 export type Response<T> = {
   data?: T
-  meta?:any
+  meta?: any
   payload?: {
     message?: string
     errors?: {

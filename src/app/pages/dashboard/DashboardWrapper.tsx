@@ -14,12 +14,12 @@ import {
   StatisticsWidget5,
   ListsWidget1,
 } from '../../../_metronic/partials/widgets'
-import { useEffect } from 'react'
-import { useAuth } from '../../modules/auth'
-import { getUserByToken } from '../../modules/auth/core/_requests'
+import {useContext, useEffect} from 'react'
+import {useAuth} from '../../modules/auth'
+import {getUserByToken} from '../../modules/auth/core/_requests'
+import {AppContext} from '../../../AppContext'
 
 const DashboardPage = () => (
-  
   <>
     {/* begin::Row */}
     {/* <div className='row g-5 g-xl-8'>
@@ -133,17 +133,19 @@ const DashboardPage = () => (
 )
 
 const DashboardWrapper = () => {
-  const {auth, logout, setCurrentUser} = useAuth ()
+  const {auth, logout, setCurrentUser} = useAuth()
+  const {setPermission} = useContext(AppContext)
 
   const CheckIsAuth = async () => {
     try {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        const {data} = await getUserByToken(auth?.access_token)
+        const {data} = await getUserByToken(auth?.api_token)
 
         if (data) {
-          setCurrentUser(data)
+          await setCurrentUser(data)
+          await setPermission(data.roles)
         } else {
           setCurrentUser(undefined)
           logout()
@@ -154,7 +156,7 @@ const DashboardWrapper = () => {
       logout()
     }
   }
-  useEffect (() => {
+  useEffect(() => {
     CheckIsAuth()
   }, [])
   const intl = useIntl()

@@ -1,4 +1,4 @@
-import {lazy, FC, Suspense} from 'react'
+import {lazy, FC, Suspense, useContext} from 'react'
 import {Route, Routes, Navigate} from 'react-router-dom'
 import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
@@ -7,16 +7,11 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
-import CategoryWrapper from '../pages/category/CategoryWrapper'
-import ColorWrapper from '../pages/color/ColorWrapper'
-
-import ProductWrapper from '../pages/product/ProductWrapper'
-import CodePromoWrapper from '../pages/codePromo/CodePromoWrapper'
-import OrderWrapper from '../pages/order/OrderWrapper'
-import EventsWrapper from '../pages/events/EventsWrapper'
-import PackWrapper from '../pages/pack/PackWrapper'
+import UsersWrapper from '../pages/users/UsersWrapper'
+import {AppContext} from '../../AppContext'
 
 const PrivateRoutes = () => {
+  const {hasPermission} = useContext(AppContext)
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
   const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
@@ -31,17 +26,7 @@ const PrivateRoutes = () => {
         <Route path='auth/*' element={<Navigate to='/dashboard' />} />
         {/* Pages */}
         <Route path='dashboard' element={<DashboardWrapper />} />
-        <Route path='category/liste/*' element={<CategoryWrapper />} />
-        <Route path='color/*' element={<ColorWrapper />} />
-        <Route path='product/*' element={<ProductWrapper />} />
-        <Route path='code-promo/*' element={<CodePromoWrapper />} />
-        <Route path='orders/*' element={<OrderWrapper />} />
-        <Route path='events/*' element={<EventsWrapper />} />
-        <Route path='packs/*' element={<PackWrapper />} />
-
-
-
-
+        {hasPermission('view_user') && <Route path='users/liste/*' element={<UsersWrapper />} />}
 
         {/* -------------------------------------------------- */}
         <Route
