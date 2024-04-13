@@ -32,7 +32,7 @@ const EditModalFormWrapper = () => {
   }
 
   if (!isLoading && !error && user) {
-    return <EditModalForm isUserLoading={isLoading} user={user} />
+    return <EditModalForm isUserLoading={isLoading} user={user?.data} />
   }
 
   return null

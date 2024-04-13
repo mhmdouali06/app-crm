@@ -13,7 +13,7 @@ type Props = {
 }
 
 const UserActionsCell: FC<Props> = ({id}) => {
-  const {CustomAlert} = useContext(AppContext)
+  const {CustomAlert, hasPermission} = useContext(AppContext)
   const {setItemIdForUpdate} = useListView()
   const {query} = useQueryResponse()
   const queryClient = useQueryClient()
@@ -50,27 +50,32 @@ const UserActionsCell: FC<Props> = ({id}) => {
         data-kt-menu='true'
       >
         {/* begin::Menu item */}
-        <div className='menu-item px-3'>
-          <a className='menu-link px-3' onClick={openEditModal}>
-            Modifier
-          </a>
-        </div>
+        {hasPermission('update_user') && (
+          <div className='menu-item px-3'>
+            <a className='menu-link px-3' onClick={openEditModal}>
+              Modifier
+            </a>
+          </div>
+        )}
         {/* end::Menu item */}
 
         {/* begin::Menu item */}
-        <div className='menu-item px-3'>
-          <a
-            className='menu-link px-3'
-            data-kt-users-table-filter='delete_row'
-            onClick={async () => {
-              if (await CustomAlert()) {
-                await deleteItem.mutateAsync()
-              }
-            }}
-          >
-            Supprimer
-          </a>
-        </div>
+        {hasPermission('delete_user') && (
+          <div className='menu-item px-3'>
+            <a
+              className='menu-link px-3'
+              data-kt-users-table-filter='delete_row'
+              onClick={async () => {
+                if (await CustomAlert()) {
+                  await deleteItem.mutateAsync()
+                }
+              }}
+            >
+              Supprimer
+            </a>
+          </div>
+        )}
+
         {/* end::Menu item */}
       </div>
       {/* end::Menu */}

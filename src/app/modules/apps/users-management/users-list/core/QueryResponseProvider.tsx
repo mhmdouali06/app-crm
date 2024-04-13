@@ -64,7 +64,7 @@ const useQueryResponsePagination = () => {
 
   const {response} = useQueryResponse()
 
-  if (!response) {
+  if (!response || !response.meta) {
     return defaultPaginationState
   }
 

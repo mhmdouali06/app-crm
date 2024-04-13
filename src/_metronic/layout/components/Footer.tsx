@@ -12,8 +12,8 @@ const Footer: FC = () => {
       >
         <div className='text-dark order-2 order-md-1'>
           <span className='text-muted fw-bold me-2'>{new Date().getFullYear()} &copy;</span>
-          <a href='https://softcactus.ma/' target='_blank' className='text-gray-800 text-hover-primary'>
-          softcactus
+          <a href='#' target='_blank' className='text-gray-800 text-hover-primary'>
+            mhmdouali
           </a>
         </div>
         {/* <ul className='menu menu-gray-600 menu-hover-primary fw-bold order-1'>

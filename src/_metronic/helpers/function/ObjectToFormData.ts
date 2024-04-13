@@ -18,16 +18,17 @@ export const ObjectToArrayFormData = (obj: any) => {
         formData.append(key, obj[key])
       }
       if (Array.isArray(obj[key])) {
-       
-          for (let i = 0; i < obj[key].length; i++) {
-            if (obj[key][i] instanceof File  ) {
-              // If it's a File, append the file to the formData
-              formData.append(`${key}[${i}]`, obj[key][i]);
-            } if(typeof obj[key][i] === 'object' && !(obj[key][i] instanceof  File)) {
-  
-              formData.append(`${key}[${i}]`,  JSON.stringify(obj[key][i]));
-            }
-          
+        for (let i = 0; i < obj[key].length; i++) {
+          if (typeof obj[key][i] == 'string') {
+            formData.append(`${key}[${i}]`, obj[key][i])
+          }
+          if (obj[key][i] instanceof File) {
+            // If it's a File, append the file to the formData
+            formData.append(`${key}[${i}]`, obj[key][i])
+          }
+          if (typeof obj[key][i] === 'object' && !(obj[key][i] instanceof File)) {
+            formData.append(`${key}[${i}]`, JSON.stringify(obj[key][i]))
+          }
         }
       }
     }

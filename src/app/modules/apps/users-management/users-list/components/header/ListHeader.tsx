@@ -14,7 +14,7 @@ const ListHeader = () => {
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
-        {selected.length > 0 ? <ListGrouping /> : hasPermission('create_user') && <ListToolbar />}
+        {selected.length > 0 ? hasPermission('delete_user') && <ListGrouping /> : <ListToolbar />}
         {/* end::Group actions */}
       </div>
       {/* end::Card toolbar */}

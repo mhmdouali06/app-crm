@@ -1,4 +1,4 @@
-import {FC, useContext, useState} from 'react'
+import {FC, useContext, useEffect, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {isNotEmpty, toAbsoluteUrl} from '../../../../../../_metronic/helpers'
@@ -14,6 +14,8 @@ import Textarea from '../../../../../../_metronic/layout/forms/Inputs/Textarea'
 import {ObjectToFormData} from '../../../../../../_metronic/helpers/function/ObjectToFormData'
 import {ObjectToUrlEncoded} from '../../../../../../_metronic/helpers/function/ObjectToUrlEncoded'
 import {AppContext} from '../../../../../../AppContext'
+import SearshSelect from '../../../../../../_metronic/layout/forms/Inputs/SearshSelect'
+import {getRoles} from '../../../roles-management/roles-list/core/_requests'
 
 type Props = {
   isUserLoading: boolean
@@ -22,27 +24,39 @@ type Props = {
 const blankImg = toAbsoluteUrl('/media/svg/avatars/blank.svg')
 
 const editUserSchema = Yup.object().shape({
-  description: Yup.string(),
-  name: Yup.string()
-    .min(3, 'Au moins 3 caractères')
-    .max(50, 'Maximum 50 caractères')
-    .required('Le nom est requis'),
-  // image: Yup.mixed().required('Le fichier est requis'),
+  first_name: Yup.string(),
+  last_name: Yup.string(),
+  email: Yup.string().email('Must be a valid email').required('Email is required'),
+  address: Yup.string().required('Address is required'),
+  role: Yup.string().required('Role is required'),
+  phone: Yup.string().required('Phone is required'),
+  password: Yup.string(),
+  password_confirmation: Yup.string().when('password', {
+    is: (val: string) => (val && val.length > 0 ? true : false),
+    then: Yup.string()
+      .oneOf([Yup.ref('password')], 'Passwords must match')
+      .required('Confirm Password is required'),
+  }),
+
+  image: Yup.mixed().required('Le fichier est requis'),
 })
 
 const EditModalForm: FC<Props> = ({user, isUserLoading}) => {
   const {errorToast, successToast} = useContext(AppContext)
   const {setItemIdForUpdate} = useListView()
   const {refetch} = useQueryResponse()
+  const [roles, setRoles] = useState<any>([])
   const [userForEdit] = useState<User>({
     ...user,
-    // avatar: user.avatar || initialUser.avatar,
-    // role: user.role || initialUser.role,
-    // position: user.position || initialUser.position,
-    description: user.description ? user.description : ' ',
-    name: user.name || initialUser.name,
-    email: user.email || initialUser.email,
+    first_name: user.first_name || '',
+    last_name: user.last_name || '',
+    role: (user.roles && user.roles[0].name) || '',
+    address: user.address || '',
+    phone: user.phone || '',
+    email: user.email || '',
     image: user.image ? user.image_url : blankImg,
+    password: '',
+    password_confirmation: '',
   })
 
   const formik = useFormik({
@@ -85,6 +99,18 @@ const EditModalForm: FC<Props> = ({user, isUserLoading}) => {
     }
     setItemIdForUpdate(undefined)
   }
+  const getRolesListe = async () => {
+    const data: any = await getRoles('?items=all')
+    const modifiedData = await data.map((item: any) => ({
+      label: item.name,
+      value: item.name,
+    }))
+    setRoles(modifiedData)
+  }
+
+  useEffect(() => {
+    getRolesListe()
+  }, [])
   return (
     <>
       <form id='kt_modal_add_user_form' className='form' onSubmit={formik.handleSubmit} noValidate>
@@ -100,27 +126,97 @@ const EditModalForm: FC<Props> = ({user, isUserLoading}) => {
           data-kt-scroll-offset='300px'
         >
           {/* begin::Input group */}
-          <div className='fv-row my-7 '>
-            <FileInput formik={formik} name='image' label='Image' isRequired={true} />
+          <div className='row my-7 '>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              {' '}
+              <FileInput formik={formik} name='image' label='Image' isRequired={true} />
+            </div>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <SearshSelect
+                options={roles.length > 0 ? roles : []}
+                name='role'
+                formik={formik}
+                label='Role'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
           </div>
-          <div className='fv-row mb-7'>
-            <Input
-              type='string'
-              name='name'
-              formik={formik}
-              label='Nom'
-              isUserLoading={isUserLoading}
-              isRequired={true}
-            />
+          <div className='row mb-7'>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='string'
+                name='last_name'
+                formik={formik}
+                label='Nom'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='string'
+                name='first_name'
+                formik={formik}
+                label='Prénom'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
+          </div>
+          <div className='row mb-7'>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='phone'
+                name='phone'
+                formik={formik}
+                label='Téléphone'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='email'
+                name='email'
+                formik={formik}
+                label='Email'
+                isDisabled={user.id ? true : false}
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
           </div>
 
           <div className='fv-row mb-7'>
             <Textarea
-              name='description'
+              name='address'
               formik={formik}
-              label='Description'
+              label='Adresse'
               isUserLoading={isUserLoading}
             />
+          </div>
+          <div className='row mb-7'>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='password'
+                name='password'
+                formik={formik}
+                label='Mot de passe'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
+            <div className='col-lg-6 col-md-6 col-sm-12'>
+              <Input
+                type='password'
+                name='password_confirmation'
+                formik={formik}
+                label='Confirmer le mot de passe'
+                isUserLoading={isUserLoading}
+                isRequired={true}
+              />
+            </div>
           </div>
         </div>
 

@@ -9,6 +9,9 @@ import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import UsersWrapper from '../pages/users/UsersWrapper'
 import {AppContext} from '../../AppContext'
+import RolesWrapper from '../pages/roles/RolesWrapper'
+import SuppliersWrapper from '../pages/suppliers/SuppliersWrapper'
+import CategoriesWrapper from '../pages/categories/CategoriesWrapper'
 
 const PrivateRoutes = () => {
   const {hasPermission} = useContext(AppContext)
@@ -26,7 +29,11 @@ const PrivateRoutes = () => {
         <Route path='auth/*' element={<Navigate to='/dashboard' />} />
         {/* Pages */}
         <Route path='dashboard' element={<DashboardWrapper />} />
-        {hasPermission('view_user') && <Route path='users/liste/*' element={<UsersWrapper />} />}
+        <Route path='users/liste/*' element={<UsersWrapper />} />
+        <Route path='roles/liste/*' element={<RolesWrapper />} />
+        <Route path='suppliers/liste/*' element={<SuppliersWrapper />} />
+        <Route path='categories/liste/*' element={<CategoriesWrapper />} />
+        {/* {hasPermission('view_user') && <Route path='users/liste/*' element={<UsersWrapper />} />} */}
 
         {/* -------------------------------------------------- */}
         <Route

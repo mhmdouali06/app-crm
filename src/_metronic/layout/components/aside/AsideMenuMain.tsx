@@ -3,13 +3,9 @@ import {useIntl} from 'react-intl'
 import {KTSVG} from '../../../helpers'
 import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
 import {AsideMenuItem} from './AsideMenuItem'
-import {TbCategory2, TbPercentage} from 'react-icons/tb'
-import {GiCandleHolder} from 'react-icons/gi'
-import {CiShoppingBasket} from 'react-icons/ci'
-import {BsCalendar2Event} from 'react-icons/bs'
-import {FaBoxesPacking} from 'react-icons/fa6'
-
-import {IoColorPalette} from 'react-icons/io5'
+import {FaUsers, FaTruckFast} from 'react-icons/fa6'
+import {FaUserCog} from 'react-icons/fa'
+import {MdCategory} from 'react-icons/md'
 import {useContext} from 'react'
 import {AppContext} from '../../../../AppContext'
 
@@ -32,12 +28,21 @@ export function AsideMenuMain() {
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Utilisateur</span>
         </div>
+        {hasPermission('view_roles') && (
+          <AsideMenuItem to='/roles/liste/all' title='Roles' reactIcon={<FaUserCog />} />
+        )}
         {hasPermission('view_user') && (
+          <AsideMenuItem to='/users/liste/all' title='Utilisateur' reactIcon={<FaUsers />} />
+        )}
+        {hasPermission('view_supplier') && (
           <AsideMenuItem
-            to='/users/liste/all'
-            title='liste des utilisateur'
-            reactIcon={<TbCategory2 />}
+            to='/suppliers/liste/all'
+            title='Fournisseur'
+            reactIcon={<FaTruckFast />}
           />
+        )}
+        {hasPermission('view_category') && (
+          <AsideMenuItem to='/categories/liste/all' title='Categories' reactIcon={<MdCategory />} />
         )}
       </div>
       {/* <AsideMenuItemWithSub to='/category' title='Nos parfums' reactIcon={<TbCategory2 />} >
